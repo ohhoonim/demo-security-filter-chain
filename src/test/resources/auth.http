@@ -1,0 +1,4 @@
+### Get request example
+GET http://localhost:8080/auth HTTP/1.1
+Accept: application/json
+Authorization: Basic user 08cf09b3-2941-4530-810c-ffc30af99a03
