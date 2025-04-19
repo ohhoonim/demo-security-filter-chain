@@ -28,19 +28,16 @@ public class Step02SecurityFilterChainBeanTest {
         // HeaderWriterFilter
         // CsrfFilter
         // LogoutFilter
-
         ////사라짐////////   UsernamePasswordAuthenticationFilter
         ////사라짐////////   DefaultResourcesFilter
         ////사라짐////////   DefaultLoginPageGeneratingFilter
         ////사라짐////////   DefaultLogoutPageGeneratingFilter
         ////사라짐////////   BasicAuthenticationFilter
-
         // RequestCacheAwareFilter
         // SecurityContextHolderAwareRequestFilter
         // AnonymousAuthenticationFilter
         // ExceptionTranslationFilter
         ////사라짐////////   AuthorizationFilter
-
     }
 
     @Autowired

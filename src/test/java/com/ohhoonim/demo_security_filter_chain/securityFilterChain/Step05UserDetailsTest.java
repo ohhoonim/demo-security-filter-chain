@@ -26,7 +26,6 @@ public class Step05UserDetailsTest {
 
     @Test
     public void loadContext() {
-
         // SecurityFilterChain
         // ///////////////
         // DisableEncodeUrlFilter

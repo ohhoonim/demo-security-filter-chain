@@ -1,4 +1,23 @@
 ### Get request example
-GET http://localhost:8080/auth HTTP/1.1
-Accept: application/json
-Authorization: Basic user 08cf09b3-2941-4530-810c-ffc30af99a03
+GET http://localhost:8080/main
+Accept: text/html
+
+###
+
+POST http://localhost:8080/login 
+Accept: text/html
+
+###
+
+GET http://localhost:8080/somePage
+Accept: text/html
+
+###
+
+GET http://localhost:8080/refresh
+Accept: text/html
+
+###
+
+POST http://localhost:8080/logout 
+Accept: text/html
