@@ -13,8 +13,14 @@ import io.jsonwebtoken.security.Keys;
 
 public class Step00JwtBasic {
 
+  /*
+   * jwt는 header.payload.signature 로 구성된다. 
+   * 예) eyAiYWxnIjogIkgyNTYiIH0K.eyAic3ViIjogIkpvZSIgfQo=.ZXlBaVlXeG5Jam9nSW
+   */
+
   @Test
   public void base64PlainEncodedJwt() {
+    // header + payload 만 우선 보자 
     String header = """
         {
           "alg": "none"
@@ -37,6 +43,7 @@ public class Step00JwtBasic {
 
   @Test
   public void jwsClaimExample() {
+    // signature는 어떻게 만들어질까
     String header = """
         { "alg": "H256" }
         """;
