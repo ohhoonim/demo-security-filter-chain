@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
@@ -36,10 +37,11 @@ public class Step01AuthoritiesTest {
     public void authenticatedTest() {
         mockMvcTester.get().uri("/role/admin")
             .assertThat()
-            .hasStatus(HttpStatus.FORBIDDEN);
+            .hasStatus(HttpStatus.FORBIDDEN); // 403
     }
 
     @TestConfiguration
+    @EnableWebSecurity(debug = true)
     static class SecurityConfig {
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

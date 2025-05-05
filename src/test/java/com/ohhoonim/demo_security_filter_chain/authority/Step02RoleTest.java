@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
@@ -30,7 +31,7 @@ public class Step02RoleTest {
     }
 
     @Test
-    @WithMockUser(authorities =  {"read", "write"})
+    @WithMockUser(authorities =  {"read", "write", "update"})
     public void userAuthoritiesTest() {
         mockMvcTester.get().uri("/privillege/write")
                 .assertThat()
@@ -47,12 +48,13 @@ public class Step02RoleTest {
 
 
     @TestConfiguration
+    @EnableWebSecurity(debug = true)
     static class SecurityConfig {
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
             http.authorizeHttpRequests(authz -> authz
                     .requestMatchers("/role/admin")
-                            .hasRole("ADMIN")
+                            .hasRole("ADMIN") // ROLE_
                     .requestMatchers("/privillege/write")
                             // .hasAuthority("write")
                             .access(new WebExpressionAuthorizationManager(

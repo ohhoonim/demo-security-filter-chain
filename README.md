@@ -17,7 +17,7 @@
   - step04 : AuthorityByMethod
 
 ### JWT
-  - 준비중
+  - JJWT 라이브러리
 
 ### OAuth2
   - 준비중
