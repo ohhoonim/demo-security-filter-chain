@@ -307,10 +307,25 @@ class BearerTokenService implements BearerTokenUsecase {
 
 }
 /*
+ */
+/*
+# Product Requirements Document
+
+## 회원가입
+생략
+
+## 가입승인
+생략
+
+## 로그인
+- 아이디/패스워드 기반 로그인
+- 로그인 시도시 아이디/패스워드가 일치하면 json web token을 리턴한다
+
 ```plantuml
 @startuml 
 left to right direction
-skinparam monochrome reverse 
+
+title Sign-Jwt Model : Usecase
 
 actor 비회원
 actor 회원
@@ -328,24 +343,48 @@ usecase 가입승인
 
 @enduml
 ```
- */
-/*
-# Product Requirements Document
 
-## 회원가입
-생략
+```
+@startuml
+left to right direction
 
-## 가입승인
-생략
+title Sign-Jwt Model : logical > class
 
-## 로그인
-- 아이디/패스워드 기반 로그인
-- 로그인 시도시 아이디/패스워드가 일치하면 json web token을 리턴한다
+class User {
+    id: UUID
+    name: string
+    password: string
+    getName(): string
+    findByUsernamePassword(): User [0..1]
+    getAuthorities(): Authority [0..*]
+    addAuthorites(): void
+    removeAuthrity(authority: Authority): void
+}
+
+class Authority {
+    id: UUID
+    authrity: string
+    searchByAuthority(): Authority [0..*]
+}
+
+User "1" ---- "authorities 0..*" Authority
+
+class SignVo {
+    access: String
+    refresh: String
+}
+
+@enduml
+```
+
+## Sign-Jwt Model : Logical > sequence 
 
 ```plantuml
 @startuml
 skinparam monochrome true 
 autonumber
+
+title Sign-Jwt Model : Logical > sequence 
 
 actor       회원 as member
 boundary    로그인페이지  as login_form
