@@ -268,7 +268,7 @@ class BearerTokenService implements BearerTokenUsecase {
 
     @Override
     public String generateRefreshToken(String userName, List<Authority> authorities) {
-        return generateToken(userName, authorities, TokenType.ACCESS);
+        return generateToken(userName, authorities, TokenType.REFRESH);
     }
 
     @Override
