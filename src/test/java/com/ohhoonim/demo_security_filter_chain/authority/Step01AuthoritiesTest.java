@@ -21,7 +21,7 @@ public class Step01AuthoritiesTest {
 
     @Test
     public void permitAllTest() {
-        mockMvcTester.get().uri("/main")
+        mockMvcTester.get().uri("/main/main")
             .assertThat()
             .hasStatus(HttpStatus.OK);
     }

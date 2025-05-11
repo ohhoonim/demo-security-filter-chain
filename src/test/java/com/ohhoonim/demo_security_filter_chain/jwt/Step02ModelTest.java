@@ -253,6 +253,11 @@ class BearerTokenService implements BearerTokenUsecase {
     }
 
     @Override
+    public String generateRefreshToken(String userName, List<Authority> authorities) {
+        return generateToken(userName, authorities, TokenType.REFRESH);
+    }
+
+    @Override
     public String getUsername(String refreshToken) {
         return Jwts.parser().verifyWith(key).build()
                 .parseSignedClaims(refreshToken)
@@ -267,16 +272,13 @@ class BearerTokenService implements BearerTokenUsecase {
     }
 
     @Override
-    public String generateRefreshToken(String userName, List<Authority> authorities) {
-        return generateToken(userName, authorities, TokenType.REFRESH);
-    }
-
-    @Override
     public String generateDenyToken(String userName, List<Authority> authorities) {
         return generateToken(userName, authorities, TokenType.DENY);
     }
 
-    private String generateToken(String username, List<Authority> authorities, TokenType tokenType) {
+    private String generateToken(String username,
+            List<Authority> authorities,
+            TokenType tokenType) {
         return Jwts.builder()
                 .subject(username)
                 .claim("roles",
