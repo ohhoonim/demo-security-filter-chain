@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthorityController {
 
-    @GetMapping("/main")
+    @GetMapping("/main/main")
     public String mainPermitAll() {
         return "main permitAll";
     }
