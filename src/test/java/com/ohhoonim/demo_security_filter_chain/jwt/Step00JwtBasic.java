@@ -1,17 +1,13 @@
 package com.ohhoonim.demo_security_filter_chain.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-
 import javax.crypto.SecretKey;
-
 import org.junit.jupiter.api.Test;
-
 import io.jsonwebtoken.security.Keys;
 
-public class Step00JwtBasic {
+class Step00JwtBasic {
 
   /*
    * jwt는 header.payload.signature 로 구성된다. 
@@ -19,7 +15,7 @@ public class Step00JwtBasic {
    */
 
   @Test
-  public void base64PlainEncodedJwt() {
+  void base64PlainEncodedJwt() {
     // header + payload 만 우선 보자 
     String header = """
         {
@@ -33,7 +29,8 @@ public class Step00JwtBasic {
 
     String compact = String.format("%s.%s", encodedHeader, encodedPayload);
 
-    assertThat(compact).isEqualTo("ewogICJhbGciOiAibm9uZSIKfQo=.dGhpcyBpcyBtZXNzYWdlIGluIHBheWxvYWQ=");
+    assertThat(compact)
+        .isEqualTo("ewogICJhbGciOiAibm9uZSIKfQo=.dGhpcyBpcyBtZXNzYWdlIGluIHBheWxvYWQ=");
 
   }
 
@@ -42,7 +39,7 @@ public class Step00JwtBasic {
   }
 
   @Test
-  public void jwsClaimExample() {
+  void jwsClaimExample() {
     // signature는 어떻게 만들어질까
     String header = """
         { "alg": "H256" }
