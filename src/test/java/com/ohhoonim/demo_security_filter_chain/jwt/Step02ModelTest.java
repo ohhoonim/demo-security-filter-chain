@@ -6,9 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
@@ -16,9 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.crypto.SecretKey;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,13 +23,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @ExtendWith(MockitoExtension.class)
-public class Step02ModelTest {
+class Step02ModelTest {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -49,15 +44,13 @@ public class Step02ModelTest {
     BearerTokenUsecase tokenService;
 
     @BeforeEach
-    public void setUp() {
-        signService = new SignService(userPort,
-                authorityPort,
-                tokenService);
+    void setUp() {
+        signService = new SignService(userPort, authorityPort, tokenService);
     }
 
     @Test
     @DisplayName("회원가입")
-    public void signUpTest() {
+    void signUpTest() {
         var newUser = new User("matthew", "secret");
         signService.signUp(newUser);
 
@@ -66,10 +59,11 @@ public class Step02ModelTest {
 
     @Test
     @DisplayName("회원 로그인")
-    public void signInTest() {
+    void signInTest() {
         var loginTryUser = new User("matthew", "secret");
 
-        when(userPort.findByUsernamePassword(any(), any())).thenReturn(Optional.of(new User("matthew", null)));
+        when(userPort.findByUsernamePassword(any(), any()))
+                .thenReturn(Optional.of(new User("matthew", null)));
         when(tokenService.generateAccessToken(any(), any())).thenReturn("jsdkalfsdajkflsdajfk");
         when(tokenService.generateRefreshToken(any(), any())).thenReturn("svkalsajekf");
 
@@ -80,22 +74,21 @@ public class Step02ModelTest {
     }
 
     @Test
-    public void signFailTest() {
+    void signFailTest() {
         var loginTryUser = new User("matthew", "secret");
         when(userPort.findByUsernamePassword(any(), any())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> signService.signIn(loginTryUser))
-                .hasMessage("사용자를 찾을 수 없습니다.");
+        assertThatThrownBy(() -> signService.signIn(loginTryUser)).hasMessage("사용자를 찾을 수 없습니다.");
     }
 
     @Test
     @DisplayName("회원 로그아웃")
-    public void signOutTest() {
+    void signOutTest() {
         // todo 로그아웃을 도메인 모델에서 뭘 해야할까?
     }
 
     @Test
     @DisplayName("refresh token 요청")
-    public void refreshTokenTest() {
+    void refreshTokenTest() {
         String refreshToken = "jsdkalfjsdaklv";
 
         when(tokenService.getUsername(any())).thenReturn("matthew");
@@ -109,7 +102,7 @@ public class Step02ModelTest {
     }
 
     @Test
-    public void generateTokenTest() {
+    void generateTokenTest() {
         BearerTokenService tokenService = new BearerTokenService();
         String access = tokenService.generateAccessToken("matthew", List.of());
         log.info("access : {}", access);
@@ -120,42 +113,37 @@ public class Step02ModelTest {
     }
 
     @Test
-    public void expiredTimeTest() {
+    void expiredTimeTest() {
         BearerTokenService tokenService = new BearerTokenService();
         String access = tokenService.generateDenyToken("matthew", List.of());
         log.info("access : {}", access);
 
         assertThatThrownBy(() -> tokenService.getExpired(access))
-                .isInstanceOf(ExpiredJwtException.class)
-                .hasMessageContaining("expired");
+                .isInstanceOf(ExpiredJwtException.class).hasMessageContaining("expired");
 
     }
 
 }
 
-record SignVo(
-        String access,
-        String refresh) {
+
+record SignVo(String access, String refresh) {
 }
+
 
 /////////////////////////////////record
 /// 
-record User(
-        UUID id,
-        String name,
-        String password,
-        List<Authority> authorities) {
+record User(UUID id, String name, String password, List<Authority> authorities) {
     public User(String name, String password) {
         this(null, name, password, null);
     }
 }
 
-record Authority(
-        Long id,
-        String authority) {
+
+record Authority(Long id, String authority) {
 }
 
-///////////////////////////////usecase sign
+
+/////////////////////////////// usecase sign
 interface SignUsecase {
 
     void signUp(User newUser);
@@ -166,14 +154,14 @@ interface SignUsecase {
 
 }
 
+
 class SignService implements SignUsecase {
 
     private final UserPort userPort;
     private final BearerTokenUsecase bearerTokenService;
     private final AuthorityPort authorityPort;
 
-    public SignService(UserPort userPort,
-            AuthorityPort authorityPort,
+    public SignService(UserPort userPort, AuthorityPort authorityPort,
             BearerTokenUsecase bearerTokenService) {
         this.userPort = userPort;
         this.authorityPort = authorityPort;
@@ -214,17 +202,20 @@ class SignService implements SignUsecase {
 
 }
 
+
 interface UserPort {
     void addUser(User newUser);
 
     Optional<User> findByUsernamePassword(String name, String password);
 }
 
+
 interface AuthorityPort {
     List<Authority> authoritiesByUsername(String name);
 }
 
-////////////////////////////////////usecase jwt
+
+//////////////////////////////////// usecase jwt
 interface BearerTokenUsecase {
     String generateAccessToken(String userName, List<Authority> authorities);
 
@@ -237,6 +228,7 @@ interface BearerTokenUsecase {
     // for test
     String generateDenyToken(String userName, List<Authority> authorities);
 }
+
 
 class BearerTokenService implements BearerTokenUsecase {
     Logger log = LoggerFactory.getLogger(BearerTokenService.class);
@@ -259,16 +251,14 @@ class BearerTokenService implements BearerTokenUsecase {
 
     @Override
     public String getUsername(String refreshToken) {
-        return Jwts.parser().verifyWith(key).build()
-                .parseSignedClaims(refreshToken)
-                .getPayload().getSubject();
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(refreshToken).getPayload()
+                .getSubject();
     }
 
     @Override
     public Date getExpired(String refreshToken) {
-        return Jwts.parser().verifyWith(key).build()
-                .parseSignedClaims(refreshToken)
-                .getPayload().getExpiration();
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(refreshToken).getPayload()
+                .getExpiration();
     }
 
     @Override
@@ -276,25 +266,24 @@ class BearerTokenService implements BearerTokenUsecase {
         return generateToken(userName, authorities, TokenType.DENY);
     }
 
-    private String generateToken(String username,
-            List<Authority> authorities,
+    private String generateToken(String username, List<Authority> authorities,
             TokenType tokenType) {
-        return Jwts.builder()
-                .subject(username)
+        return Jwts.builder().subject(username)
                 .claim("roles",
-                        authorities.stream()
-                                .map(Authority::authority)
+                        authorities.stream().map(Authority::authority)
                                 .collect(Collectors.joining(",")))
                 .expiration(tokenType.ext())
                 .issuedAt(Date.from(LocalDateTime.now().toInstant(ZoneOffset.of("+09:00"))))
-                .signWith(key)
-                .compact();
+                .signWith(key).compact();
     }
 
     public enum TokenType {
-        ACCESS(Date.from(LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("+09:00")))),
-        REFRESH(Date.from(LocalDateTime.now().plusDays(7).toInstant(ZoneOffset.of("+09:00")))),
-        DENY(Date.from(LocalDateTime.now().plusDays(-7).toInstant(ZoneOffset.of("+09:00"))));
+        ACCESS(Date.from(
+                LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("+09:00")))), REFRESH(
+                        Date.from(LocalDateTime.now().plusDays(7)
+                                .toInstant(ZoneOffset.of("+09:00")))), DENY(
+                                        Date.from(LocalDateTime.now().plusDays(-7)
+                                                .toInstant(ZoneOffset.of("+09:00"))));
 
         private final Date exp;
 
